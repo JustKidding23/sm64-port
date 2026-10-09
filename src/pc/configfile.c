@@ -71,6 +71,7 @@ static const struct ConfigOption options[] = {
     {.name = "deadzone",       .type = CONFIG_TYPE_UINT, .uintValue = &configDeadzone},
 };
 
+#include "psp_cfg.h"
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
 // Returns NULL if no lines could be read from the file
 static char *read_file_line(FILE *file) {

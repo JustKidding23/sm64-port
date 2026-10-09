@@ -126,6 +126,7 @@ s32 osAiSetFrequency(u32 freq) {
     return D_8033491C / (s32) a1;
 }
 
+#include "psp_save.h"
 s32 osEepromProbe(UNUSED OSMesgQueue *mq) {
     return 1;
 }
@@ -160,15 +161,15 @@ s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes)
     }
 #else
 #if !defined(TARGET_DC)
-    FILE *fp = fopen("sm64_save_file.bin", "rb");
+    PSPFILE *fp = psp_fopen("sm64_save_file.bin", "rb");
     if (fp == NULL) {
         return -1;
     }
-    if (fread(content, 1, 512, fp) == 512) {
+    if (psp_fread(content, 1, 512, fp) == 512) {
         memcpy(buffer, content + address * 8, nbytes);
         ret = 0;
     }
-    fclose(fp);
+    psp_fclose(fp);
 #else 
     /* Bake in 120 star save */
     memcpy(buffer, eeprom + address * 8, nbytes);
@@ -196,12 +197,12 @@ s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes
     s32 ret = 0;
 #else
 #if !defined(TARGET_DC)
-    FILE* fp = fopen("sm64_save_file.bin", "wb");
+    PSPFILE *fp = psp_fopen("sm64_save_file.bin", "wb");
     if (fp == NULL) {
         return -1;
     }
-    s32 ret = fwrite(content, 1, 512, fp) == 512 ? 0 : -1;
-    fclose(fp);
+    s32 ret = psp_fwrite(content, 1, 512, fp) == 512 ? 0 : -1;
+    psp_fclose(fp);
 #else
     s32 ret = 0;
 #endif
